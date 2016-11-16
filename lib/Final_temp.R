@@ -30,9 +30,10 @@ for(i in 1:2){
     }
   }
 }
+set.seed(1000)
+index= sample(2350,2100)
 ########################################################################
 # LDA set up
-index= sample(2350,2100)
 lyr_data= lyr[index,-1]
 vocab= colnames(lyr)[-1]
 n.train=length(index)
@@ -53,23 +54,22 @@ topic_number <- 20
 iteration_number <- 100
 alpha <- 0.02
 eta <- 0.02
-set.seed(327)
-#t1 <- Sys.time()
+set.seed(998)
 vocab2= colnames(lyr)
 words.lda <- lda.collapsed.gibbs.sampler(documents = doc, K = topic_number, vocab = vocab2, 
                                          num.iterations = iteration_number, alpha = alpha, 
                                          eta = eta, initial = NULL, burnin = 0,
                                          compute.log.likelihood = TRUE)
-#t2 <- Sys.time()
 theta <- t(apply(words.lda$document_sums + alpha, 2, function(x) x/sum(x)))  
 y_train= ifelse(theta<0.1,0,1)
 words.prob <- t(apply(t(words.lda$topics) + eta, 2, function(x) x/sum(x)))[,-1]
 
 ########################################################################
 # Fit XG boost model
-eatures_num= as.data.frame(features_num)
-features_train= features_num[index,]
-features_test= features_num[-index,]
+features= as.data.frame(feature2)
+features[is.na(features)]=0
+features_train= features[index,]
+features_test= features[-index,]
 param <- list(objective = "binary:logistic", max_depth = 7,eta = 0.13, gamma = 0.1)
 
 y_pre= vector()
@@ -88,19 +88,22 @@ for(i in 1:(2350-length(index))){
 }
 rank.words_test= rank.words_test[-1,]
 ########################################################################
+# Add prior probability
+prior= colSums(lyr_data)/sum(lyr_data)
+prior_mat= matrix(rep(prior,(2350-length(index))),nrow= (2350-length(index)),byrow=T)
+dim(prior_mat)
+rank.words= prior_mat* rank.words_test
+########################################################################
 # Check with original lyrics
-lyr_test= lyr_data[-index,]
+lyr_test= lyr[-index,-1]
 lyr_test= lyr_test !=0
-result= apply( lyr_test, 1, function(x) which(x !=0))
+result= apply(lyr_test, 1, function(x) which(x !=0))
 temp_sum=0
 for(i in 1:(2350-length(index))){
   temp= 5001-rank(rank.words_test[i,])
   temp_sum= temp_sum+sum(temp[result[[i]]])/length(result[[i]])
 }
 temp_sum/(2350-length(index))
-
-
-
 
 
 
