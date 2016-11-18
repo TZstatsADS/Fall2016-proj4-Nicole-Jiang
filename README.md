@@ -15,6 +15,7 @@ Term: Fall 2016
 	+ Topic modeling: I used LDA to assign the probabilities of songs belonging to each topic. Based on cross validation, topic number is 15. Furthermore, I determined the probabilities of certain word belonging to certain topic. 
 	+ Modeling: Based on cross validation, I set train set and test set. I used music features from train set to fit the 15 topics, using XGboost. 
 	+ Prediction: I used fitted model and test set to predict the probablities of songs belonging to each topic, and multipled them by the probabilities of words. Furthermore, I used the frequency of the words as prior probabilities. Hence, I adjusted the probabilities of words and ranked them.
+	+ Conclusion: If we only use words frequency, the average rank is about 650. Now, using new features and XGboost, I successdully decreased the rank to about 600. 
 	
 Following [suggestions](http://nicercode.github.io/blog/2013-04-05-projects/) by [RICH FITZJOHN](http://nicercode.github.io/about/#Team) (@richfitz). This folder is orgarnized as follows.
 
