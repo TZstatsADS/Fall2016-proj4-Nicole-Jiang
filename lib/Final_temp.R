@@ -1,6 +1,8 @@
 ########################################################################
 # Set directory
 setwd("~/Documents/Courses/ADS/Project 4/Project4_data")
+setwd("~/Documents/Courses/ADS/Project 4/Project4_data/data")
+
 ########################################################################
 # Load libraries
 library(rhdf5)
@@ -10,6 +12,7 @@ library(LDAvis)
 library(dplyr) 
 library(magrittr)
 library(lda)
+library(xgboost)
 load("lyr.RData")
 ########################################################################
 # Read the music information
@@ -30,8 +33,11 @@ for(i in 1:2){
     }
   }
 }
-set.seed(1000)
+set.seed(3367)
 index= sample(2350,2100)
+#y=1:2350
+#y=y[-index]
+#y
 ########################################################################
 # LDA set up
 lyr_data= lyr[index,-1]
@@ -50,11 +56,10 @@ get.terms <- function(x) {
 
 doc <- lapply(word.list, get.terms)
 # LDA: assgin topic
-topic_number <- 20
-iteration_number <- 100
-alpha <- 0.02
-eta <- 0.02
-set.seed(998)
+topic_number <- 15
+iteration_number <- 150
+alpha <- 0.01
+eta <- 0.01
 vocab2= colnames(lyr)
 words.lda <- lda.collapsed.gibbs.sampler(documents = doc, K = topic_number, vocab = vocab2, 
                                          num.iterations = iteration_number, alpha = alpha, 
@@ -99,11 +104,40 @@ lyr_test= lyr[-index,-1]
 lyr_test= lyr_test !=0
 result= apply(lyr_test, 1, function(x) which(x !=0))
 temp_sum=0
+final= vector()
 for(i in 1:(2350-length(index))){
   temp= 5001-rank(rank.words_test[i,])
+  final= rbind(final,temp)
   temp_sum= temp_sum+sum(temp[result[[i]]])/length(result[[i]])
 }
 temp_sum/(2350-length(index))
+########################################################################
+# check limit
+# index= sample(2350,2100)
+# y_train= theta
+# rank.words_test= matrix(0, ncol=5000)
+# for(i in 1:2100){
+#   rank.words_test= rbind(rank.words_test,colSums(y_train[i,]*words.prob))
+# }
+# rank.words_test= rank.words_test[-1,]
+# 
+# 
+# prior= colSums(lyr_data)/sum(lyr_data)
+# prior_mat= matrix(rep(prior,2100),nrow= 2100,byrow=T)
+# dim(prior_mat)
+# rank.words= prior_mat* rank.words_test
+# 
+# lyr_test= lyr[index,-1]
+# lyr_test= lyr_test !=0
+# result= apply(lyr_test, 1, function(x) which(x !=0))
+# temp_sum=0
+# final= vector()
+# for(i in 1:300){
+#   temp= 5001-rank(rank.words[i,])
+#   final= rbind(final,temp)
+#   temp_sum= temp_sum+sum(temp[result[[i]]])/length(result[[i]])
+# }
+# temp_sum/300
 
 
 
