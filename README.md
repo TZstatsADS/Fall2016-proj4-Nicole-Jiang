@@ -1,4 +1,4 @@
-# Project: Words 4 Music
+# Project: Lyrics predictor
 
 ### [Project Description](doc/Project4_desc.md)
 
@@ -11,6 +11,8 @@ Term: Fall 2016
 + Contributor's name: Chencheng Jiang (cj2451)
 + Projec title: Lyrics predictor
 + Project summary: This project is a lyrics prediction, based on corresponding music features. 
++ The methodology is: 
+++ First, extract music features from original data set. I used the music features such as 
 	
 Following [suggestions](http://nicercode.github.io/blog/2013-04-05-projects/) by [RICH FITZJOHN](http://nicercode.github.io/about/#Team) (@richfitz). This folder is orgarnized as follows.
 
