@@ -2,5 +2,5 @@
 
 ### Code lib Folder
 
-The lib directory contains various files with function definitions (but only function definitions - no code that actually runs).
+This folder contains the model and features code. Please use final_temp.R for modeling and features_from_me.R for feature extracting. There are other reference code, based on other thoughtfull ideas. 
 
